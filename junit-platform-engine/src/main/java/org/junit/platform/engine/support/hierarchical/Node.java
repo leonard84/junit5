@@ -151,6 +151,14 @@ public interface Node<C extends EngineExecutionContext> {
 		return ExecutionMode.CONCURRENT;
 	}
 
+	default void around(Runnable runnable) {
+		runnable.run();
+	}
+
+	default void interceptChildren(Runnable runnable) {
+		runnable.run();
+	}
+
 	/**
 	 * The result of determining whether the execution of a given {@code context}
 	 * should be <em>skipped</em>.
