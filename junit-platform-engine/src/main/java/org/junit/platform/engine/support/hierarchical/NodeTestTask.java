@@ -114,7 +114,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		taskContext.getListener().executionStarted(testDescriptor);
 		started = true;
 
-		node.around(() -> {
+		node.around(context, ctx -> {
+			context = ctx;
 			throwableCollector.execute(() -> {
 				// @formatter:off
 				List<NodeTestTask<C>> children = testDescriptor.getChildren().stream()
@@ -127,9 +128,9 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				final DynamicTestExecutor dynamicTestExecutor = new DefaultDynamicTestExecutor();
 				context = node.execute(context, dynamicTestExecutor);
 
-				node.interceptChildren(() -> {
+				node.interceptChildren(context, ctx2 -> {
 					if (!children.isEmpty()) {
-						children.forEach(child -> child.setParentContext(context));
+						children.forEach(child -> child.setParentContext(ctx2));
 						taskContext.getExecutorService().invokeAll(children);
 					}
 

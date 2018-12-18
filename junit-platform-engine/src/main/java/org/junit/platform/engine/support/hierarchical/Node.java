@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -151,12 +152,12 @@ public interface Node<C extends EngineExecutionContext> {
 		return ExecutionMode.CONCURRENT;
 	}
 
-	default void around(Runnable runnable) {
-		runnable.run();
+	default void around(C context, Consumer<C> runnable) {
+		runnable.accept(context);
 	}
 
-	default void interceptChildren(Runnable runnable) {
-		runnable.run();
+	default void interceptChildren(C context, Consumer<C> runnable) {
+		runnable.accept(context);
 	}
 
 	/**
